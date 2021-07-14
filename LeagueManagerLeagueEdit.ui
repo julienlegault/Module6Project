@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>LeagueManager</class>
- <widget class="QMainWindow" name="LeagueManager">
+ <class>LeagueManagerLeagueEdit</class>
+ <widget class="QMainWindow" name="LeagueManagerLeagueEdit">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1068</width>
-    <height>657</height>
+    <width>1070</width>
+    <height>655</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>League Manager</string>
+   <string>League Manager: League Edit</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTableWidget" name="tableWidget">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>90</y>
+      <x>60</x>
+      <y>100</y>
       <width>951</width>
       <height>531</height>
      </rect>
@@ -40,12 +40,12 @@
     </attribute>
     <column>
      <property name="text">
-      <string>Name</string>
+      <string>Team Name</string>
      </property>
     </column>
     <column>
      <property name="text">
-      <string>Teams</string>
+      <string>Members</string>
      </property>
     </column>
     <column>
@@ -54,38 +54,37 @@
      </property>
     </column>
    </widget>
-   <widget class="QLabel" name="CurrentLeaguesLabel">
+   <widget class="QPushButton" name="LoadButton">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>50</y>
-      <width>951</width>
-      <height>41</height>
+      <x>809</x>
+      <y>70</y>
+      <width>111</width>
+      <height>28</height>
      </rect>
     </property>
-    <property name="font">
-     <font>
-      <pointsize>24</pointsize>
-     </font>
+    <property name="text">
+     <string>Load File</string>
     </property>
-    <property name="styleSheet">
-     <string notr="true"/>
+   </widget>
+   <widget class="QPushButton" name="AddButton">
+    <property name="geometry">
+     <rect>
+      <x>699</x>
+      <y>70</y>
+      <width>111</width>
+      <height>28</height>
+     </rect>
     </property>
     <property name="text">
-     <string>Current Leagues</string>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <string>Add New Team</string>
     </property>
    </widget>
    <widget class="QPushButton" name="SaveButton">
     <property name="geometry">
      <rect>
-      <x>910</x>
-      <y>60</y>
+      <x>920</x>
+      <y>70</y>
       <width>90</width>
       <height>28</height>
      </rect>
@@ -103,34 +102,48 @@
      <string>Save</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="LoadButton">
+   <widget class="QLabel" name="LeagueEdit">
     <property name="geometry">
      <rect>
-      <x>799</x>
+      <x>60</x>
       <y>60</y>
-      <width>111</width>
-      <height>28</height>
+      <width>951</width>
+      <height>41</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>24</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
     <property name="text">
-     <string>Load Database</string>
+     <string>League Edit</string>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QPushButton" name="AddButton">
+   <widget class="QPushButton" name="BackButton">
     <property name="geometry">
      <rect>
-      <x>689</x>
-      <y>60</y>
-      <width>111</width>
+      <x>60</x>
+      <y>70</y>
+      <width>90</width>
       <height>28</height>
      </rect>
     </property>
     <property name="text">
-     <string>Add New League</string>
+     <string>Back</string>
     </property>
    </widget>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>
