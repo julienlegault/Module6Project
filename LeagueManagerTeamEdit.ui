@@ -17,14 +17,20 @@
    <widget class="QPushButton" name="SaveButton">
     <property name="geometry">
      <rect>
-      <x>921</x>
-      <y>50</y>
+      <x>900</x>
+      <y>40</y>
       <width>90</width>
       <height>28</height>
      </rect>
     </property>
-    <property name="whatsThis">
+    <property name="toolTip">
      <string>Saves the current league view to the database.</string>
+    </property>
+    <property name="toolTipDuration">
+     <number>3</number>
+    </property>
+    <property name="whatsThis">
+     <string/>
     </property>
     <property name="autoFillBackground">
      <bool>false</bool>
@@ -39,8 +45,8 @@
    <widget class="QLabel" name="TeamEdit">
     <property name="geometry">
      <rect>
-      <x>61</x>
-      <y>40</y>
+      <x>60</x>
+      <y>0</y>
       <width>951</width>
       <height>41</height>
      </rect>
@@ -66,11 +72,14 @@
    <widget class="QPushButton" name="BackButton">
     <property name="geometry">
      <rect>
-      <x>61</x>
-      <y>50</y>
+      <x>60</x>
+      <y>40</y>
       <width>90</width>
       <height>28</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:rgb(255, 0, 4);</string>
     </property>
     <property name="text">
      <string>Back</string>
@@ -119,11 +128,14 @@
    <widget class="QPushButton" name="AddButton">
     <property name="geometry">
      <rect>
-      <x>780</x>
-      <y>50</y>
-      <width>141</width>
+      <x>700</x>
+      <y>40</y>
+      <width>161</width>
       <height>28</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:rgb(41, 109, 255);</string>
     </property>
     <property name="text">
      <string>Add New Member</string>
