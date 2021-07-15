@@ -16,10 +16,16 @@ from league_database.league_database import LeagueDatabase
 
 
 class Ui_LeagueManager(object):
+
     _theDatabase = None
+    _lastDBName = None
 
     def setupUi(self, LeagueManager):
         self._theDatabase = LeagueDatabase()
+        if self._lastDBName:
+            self.SaveLeagues()
+            self.lineEdit.setText(self._lastDBName)
+            self.loadLeague()
         LeagueManager.setObjectName("LeagueManager")
         LeagueManager.resize(1068, 657)
         self.centralwidget = QtWidgets.QWidget(LeagueManager)
@@ -28,16 +34,21 @@ class Ui_LeagueManager(object):
         self.tableWidget.setGeometry(QtCore.QRect(50, 90, 951, 531))
         self.tableWidget.setMinimumSize(QtCore.QSize(951, 0))
         self.tableWidget.setObjectName("tableWidget")
-        self.tableWidget.setColumnCount(3)
-        self.tableWidget.setRowCount(0)
+        self.tableWidget.setColumnCount(4)
+        if self.tableWidget.rowCount():
+            for i in range(0, self.tableWidget.rowCount()-1):
+                self.tableWidget.removeRow(i)
+        self.tableWidget.setEditTriggers(self.tableWidget.NoEditTriggers)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(1, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(2, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget.setHorizontalHeaderItem(3, item)
         self.tableWidget.horizontalHeader().setCascadingSectionResizes(False)
-        self.tableWidget.horizontalHeader().setMinimumSectionSize(300)
+        self.tableWidget.horizontalHeader().setMinimumSectionSize(200)
         self.tableWidget.horizontalHeader().setStretchLastSection(True)
         self.CurrentLeaguesLabel = QtWidgets.QLabel(self.centralwidget)
         self.CurrentLeaguesLabel.setGeometry(QtCore.QRect(60, 0, 951, 41))
@@ -80,21 +91,24 @@ class Ui_LeagueManager(object):
         _translate = QtCore.QCoreApplication.translate
         LeagueManager.setWindowTitle(_translate("LeagueManager", "League Manager"))
         item = self.tableWidget.horizontalHeaderItem(0)
-        item.setText(_translate("LeagueManager", "Name"))
+        item.setText(_translate("LeagueManager", "League Name"))
         item = self.tableWidget.horizontalHeaderItem(1)
         item.setText(_translate("LeagueManager", "Teams"))
         item = self.tableWidget.horizontalHeaderItem(2)
-        item.setText(_translate("LeagueManager", "Actions"))
+        item.setText(_translate("LeagueManager", "Edit"))
+        item = self.tableWidget.horizontalHeaderItem(3)
+        item.setText(_translate("LeagueManager", "Delete"))
         self.CurrentLeaguesLabel.setText(_translate("LeagueManager", "Current Leagues"))
-        self.SaveButton.setWhatsThis(_translate("LeagueManager", "Saves the current league view to the database."))
         self.SaveButton.setText(_translate("LeagueManager", "Save"))
         self.LoadButton.setText(_translate("LeagueManager", "Load Database"))
         self.AddButton.setText(_translate("LeagueManager", "Add New League"))
         self.BackButton.setText(_translate("LeagueManager", "Back"))
 
-    def loadTeams(self):
+    def loadLeague(self):
         theFile = self.lineEdit.text()
         self._theDatabase.load(theFile)
+        for i in range(0, self.tableWidget.rowCount() - 1):
+            self.tableWidget.removeRow(i)
         i = 0
         for league in self._theDatabase.leagues:
             self.tableWidget.insertRow(i)
@@ -103,9 +117,59 @@ class Ui_LeagueManager(object):
             for team in league.teams:
                 tempList.append(team.name)
             self.tableWidget.setItem(i, 1, QtWidgets.QTableWidgetItem(', '.join(tempList)))
-            self.tableWidget.setItem(i, 2, QtWidgets.QTableWidgetItem("Delete or Edit"))
+            tempEditButton = QtWidgets.QPushButton(self.tableWidget)
+            tempEditButton.setText("Edit")
+            tempEditButton.clicked.connect(lambda: self.showLeagueView(league))
+            self.tableWidget.setCellWidget(i, 2, tempEditButton)
+            tempDeleteButton = QtWidgets.QPushButton(self.tableWidget)
+            tempDeleteButton.setText("Delete")
+            tempDeleteButton.clicked.connect(lambda: self.deleteLeague(league))
+            self.tableWidget.setCellWidget(i, 3, tempDeleteButton)
+            i += 1
 
-    def Add_League_Modal(self):
+    def loadTeam(self, inLeague):
+        for i in range(0, self.tableWidget.rowCount() - 1):
+            self.tableWidget.removeRow(i)
+        i = 0
+        for team in inLeague.teams:
+            self.tableWidget.insertRow(i)
+            self.tableWidget.setItem(i, 0, QtWidgets.QTableWidgetItem(team.name))
+            tempList = []
+            for member in team.members:
+                tempList.append(member.name)
+            self.tableWidget.setItem(i, 1, QtWidgets.QTableWidgetItem(', '.join(tempList)))
+            tempEditButton = QtWidgets.QPushButton(self.tableWidget)
+            tempEditButton.setText("Edit")
+            tempEditButton.clicked.connect(lambda: self.showTeamView(team))
+            self.tableWidget.setCellWidget(i, 2, tempEditButton)
+            tempDeleteButton = QtWidgets.QPushButton(self.tableWidget)
+            tempDeleteButton.setText("Delete")
+            tempDeleteButton.clicked.connect(lambda: self.deleteTeam(team))
+            self.tableWidget.setCellWidget(i, 3, tempDeleteButton)
+            i += 1
+
+    def loadMembersCSV(self):
+        pass
+
+    def loadMembers(self, inTeam):
+        for i in range(0, self.tableWidget.rowCount() - 1):
+            self.tableWidget.removeRow(i)
+        i = 0
+        for member in inTeam.teams:
+            self.tableWidget.insertRow(i)
+            self.tableWidget.setItem(i, 0, QtWidgets.QTableWidgetItem(member.name))
+            self.tableWidget.setItem(i, 1, QtWidgets.QTableWidgetItem(member.email))
+            tempEditButton = QtWidgets.QPushButton(self.tableWidget)
+            tempEditButton.setText("Edit")
+            tempEditButton.clicked.connect(lambda: self.showMemberView(member))
+            self.tableWidget.setCellWidget(i, 2, tempEditButton)
+            tempDeleteButton = QtWidgets.QPushButton(self.tableWidget)
+            tempDeleteButton.setText("Delete")
+            tempDeleteButton.clicked.connect(lambda: self.deleteMember(member))
+            self.tableWidget.setCellWidget(i, 3, tempDeleteButton)
+            i += 1
+
+    def AddLeagueModal(self):
         text, ok = QInputDialog.getText(self.centralwidget, 'Add League', 'League Name:')
         if ok:
             tempLeague = League(id(text), text)
@@ -114,4 +178,54 @@ class Ui_LeagueManager(object):
             self.tableWidget.insertRow(tempIndex)
             self.tableWidget.setItem(tempIndex, 0, QtWidgets.QTableWidgetItem(text))
             self.tableWidget.setItem(tempIndex, 1, QtWidgets.QTableWidgetItem("No Teams"))
-            self.tableWidget.setItem(tempIndex, 2, QtWidgets.QTableWidgetItem("Delete or Edit"))
+            tempEditButton = QtWidgets.QPushButton(self.tableWidget)
+            tempEditButton.setText("Edit")
+            tempEditButton.clicked.connect(lambda: self.showLeagueView(tempLeague))
+            self.tableWidget.setCellWidget(tempIndex, 2, tempEditButton)
+            tempDeleteButton = QtWidgets.QPushButton(self.tableWidget)
+            tempDeleteButton.setText("Delete")
+            tempDeleteButton.clicked.connect(lambda: self.deleteLeague(tempLeague))
+            self.tableWidget.setCellWidget(tempIndex, 3, tempDeleteButton)
+
+    def SaveLeagues(self):
+        if self._lastDBName:
+            self._theDatabase.save(self._lastDBName)
+        else:
+            self._theDatabase.save(self.lineEdit.text())
+
+    def deleteLeague(self, inLeague):
+        pass
+
+    def deleteTeam(self, inTeam):
+        pass
+
+    def deleteMember(self, inMember):
+        pass
+
+    def showLeagueView(self, inLeague):
+        print(self.tableWidget.horizontalHeaderItem(1))
+        item = self.tableWidget.horizontalHeaderItem(0)
+        item.setText("Team Name")
+        item = self.tableWidget.horizontalHeaderItem(1)
+        item.setText("Members")
+        item = self.tableWidget.horizontalHeaderItem(2)
+        item.setText("Edit")
+        item = self.tableWidget.horizontalHeaderItem(3)
+        item.setText("Delete")
+        self.CurrentLeaguesLabel.setText("Current Leagues")
+        self.SaveButton.setText("Save")
+        self.LoadButton.setText("Load CSV")
+        self.AddButton.setText("Add New Team")
+        self.BackButton.setText("Back")
+        self.loadTeam(inLeague)
+        self.LoadButton.clicked.connect(lambda: self.loadMembersCSV())
+        self.AddButton.clicked.connect(lambda: self.AddLeagueModal())
+        self.SaveButton.clicked.connect(lambda: self.SaveLeagues())
+        self.BackButton.clicked.connect(lambda: self.backToLeagus())
+        self.BackButton.setVisible(True)
+
+    def showTeamView(self, inTeam):
+        pass
+
+    def showMemberView(self, inMember):
+        pass
